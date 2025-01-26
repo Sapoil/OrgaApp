@@ -1,0 +1,1 @@
+Pour quitter le AssTaskFragment, le comportement est étrange lorsque l'on a ouvert d'autres activity (le add task est toujours fermé en dernier...)
