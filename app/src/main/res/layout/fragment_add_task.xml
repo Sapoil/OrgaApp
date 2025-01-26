@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.AddTaskFragment"
-    android:background="@color/background">
+    android:background="@color/background"
+    tools:context=".fragments.AddTaskFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".05" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -34,8 +35,7 @@
         <EditText
             android:id="@+id/editTitle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_height="48dp"
             android:hint="Titre"
             android:importantForAutofill="no"
             android:inputType="text"
@@ -46,7 +46,7 @@
         <EditText
             android:id="@+id/editDetail"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:hint="Detail"
             android:importantForAutofill="no"
             android:inputType="text"
@@ -54,45 +54,61 @@
             app:layout_constraintStart_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/editTitle" />
 
+        <Spinner
+            android:id="@+id/editOrga"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:hint="Organisation"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/editDetail" />
+
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="11dp"
             android:text="Importance : "
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintHorizontal_bias="0.02"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toBottomOf="@+id/editDetail" />
+            app:layout_constraintTop_toBottomOf="@+id/editOrga" />
 
         <Spinner
             android:id="@+id/editImportance"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:spinnerMode="dropdown"
+            android:layout_height="48dp"
+            android:spinnerMode="dialog"
             app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/editDetail" />
+            app:layout_constraintTop_toBottomOf="@+id/editOrga"
+            />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Deadline"
+            android:layout_marginTop="11dp"
+            android:text="Date limite :"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintHorizontal_bias="0.02"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
-            app:layout_constraintTop_toBottomOf="@+id/editImportance" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-        <CalendarView
+        <DatePicker
             android:id="@+id/editDeadline"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:calendarViewShown="true"
+            android:datePickerMode="calendar"
+            android:spinnersShown="true"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.45"
             app:layout_constraintStart_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -105,8 +121,6 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="@+id/guideline4" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

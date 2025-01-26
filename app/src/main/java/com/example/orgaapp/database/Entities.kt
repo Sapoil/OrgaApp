@@ -1,4 +1,4 @@
-package com.organizationApp.database
+package com.example.orgaapp.database
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -17,7 +17,7 @@ data class Task(
     @PrimaryKey(autoGenerate = true) val id: Int,
 
     val title: String,
-    val detail: String?,
+    val detail: String,
     val importance: Int,
     val deadline: Date,
     val orgId: Int?

@@ -5,5 +5,12 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.OrgaApp" parent="Base.Theme.OrgaApp" />
+    <style name="Theme.OrgaApp" parent="Base.Theme.OrgaApp" >
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="android:Widget.Holo.Light.DropDownItem.Spinner">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#ff49454f</item>
+    </style>
 </resources>

@@ -6,10 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
+import androidx.room.Room
+import com.example.orgaapp.database.AppDatabase
 import com.example.orgaapp.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -17,27 +18,33 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    lateinit var db: AppDatabase
 
     val sharedFloatingActionButton: FloatingActionButton by lazy{
-        findViewById<FloatingActionButton>(R.id.fab)
+        findViewById(R.id.fab)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.fab.setOnClickListener {
-            replaceFragment(AddTaskFragment())
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "task-db"
+        ).build() //TODO : Examiner le problème de build de la bdd
 
+        binding.fab.setOnClickListener {
+            binding.fab.isEnabled = false
             binding.fab.hide()
+            addFragment(AddTaskFragment())
         }
     }
 
-    private fun replaceFragment(fragment: Fragment){
+    private fun addFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.nav_host_fragment_content_main,fragment)
+        fragmentTransaction.add(R.id.nav_host_fragment_content_main,fragment)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
