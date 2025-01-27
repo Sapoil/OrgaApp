@@ -1,1 +1,132 @@
 Pour quitter le AssTaskFragment, le comportement est étrange lorsque l'on a ouvert d'autres activity (le add task est toujours fermé en dernier...)
+
+Pour ajouter une méthode `@Query` avec un paramètre dans votre DAO, vous devez définir la requête SQL et utiliser des **paramètres nommés ou positionnels** pour passer les valeurs dynamiquement. Room les remplacera automatiquement au moment de l'exécution.
+
+Voici comment procéder :
+
+---
+
+### **Exemple : Ajouter une Query avec un paramètre dans DAO**
+
+#### 1. Méthode DAO avec un paramètre unique
+Voici un exemple où vous récupérez toutes les tâches associées à un ID d'organisation donné.
+
+```kotlin
+@Dao
+interface TaskDao {
+    @Query("SELECT * FROM tasks WHERE orgId = :organizationId")
+    fun getTasksByOrganization(organizationId: Int): List<Task>
+}
+```
+
+- **`:organizationId`** est un paramètre nommé dans la requête.
+- Le paramètre `organizationId` sera remplacé par la valeur que vous passez à la méthode.
+
+#### Utilisation :
+```kotlin
+val tasks = database.taskDao().getTasksByOrganization(1)
+tasks.forEach { task ->
+    println("Task: ${task.title}")
+}
+```
+
+---
+
+#### 2. Méthode DAO avec plusieurs paramètres
+Si vous devez filtrer par plusieurs critères, ajoutez plusieurs paramètres à la requête.
+
+##### Exemple :
+```kotlin
+@Dao
+interface TaskDao {
+    @Query("SELECT * FROM tasks WHERE orgId = :organizationId AND importance = :importanceLevel")
+    fun getTasksByOrgAndImportance(organizationId: Int, importanceLevel: Int): List<Task>
+}
+```
+
+#### Utilisation :
+```kotlin
+val tasks = database.taskDao().getTasksByOrgAndImportance(1, 5)
+tasks.forEach { task ->
+    println("Task: ${task.title}")
+}
+```
+
+---
+
+### **Utilisation avec des paramètres facultatifs**
+Pour ajouter une flexibilité (par exemple, un filtre facultatif), vous pouvez construire une requête dynamique en utilisant SQL.
+
+#### Exemple : Ajouter un paramètre facultatif
+```kotlin
+@Dao
+interface TaskDao {
+    @Query("SELECT * FROM tasks WHERE (:organizationId IS NULL OR orgId = :organizationId)")
+    fun getTasksByOrganization(organizationId: Int?): List<Task>
+}
+```
+
+- Si `organizationId` est `null`, la condition sera ignorée.
+
+#### Utilisation :
+```kotlin
+// Exemple sans filtre d'organisation
+val allTasks = database.taskDao().getTasksByOrganization(null)
+
+// Exemple avec filtre d'organisation
+val filteredTasks = database.taskDao().getTasksByOrganization(1)
+```
+
+---
+
+### **Paramètres de type chaîne (String)**
+Pour rechercher des éléments par correspondance partielle, vous pouvez utiliser l'opérateur SQL `LIKE`.
+
+#### Exemple :
+```kotlin
+@Dao
+interface TaskDao {
+    @Query("SELECT * FROM tasks WHERE title LIKE :titlePattern")
+    fun getTasksByTitle(titlePattern: String): List<Task>
+}
+```
+
+#### Utilisation :
+```kotlin
+// Rechercher les titres contenant "meeting"
+val tasks = database.taskDao().getTasksByTitle("%meeting%")
+tasks.forEach { task ->
+    println("Task: ${task.title}")
+}
+```
+
+---
+
+### **Requête avec tri personnalisé**
+Si vous voulez une requête avec un paramètre qui détermine l'ordre des résultats (par exemple, tri ascendant ou descendant), vous pouvez le passer dynamiquement.
+
+#### Exemple :
+```kotlin
+@Dao
+interface TaskDao {
+    @Query("SELECT * FROM tasks ORDER BY importance COLLATE NOCASE :order")
+    fun getTasksSortedByImportance(order: String): List<Task>
+}
+```
+
+#### Utilisation :
+```kotlin
+val tasksAscending = database.taskDao().getTasksSortedByImportance("ASC")
+val tasksDescending = database.taskDao().getTasksSortedByImportance("DESC")
+```
+
+---
+
+### **Résumé des bonnes pratiques :**
+1. Utilisez **paramètres nommés** dans les requêtes (par exemple, `:parameterName`).
+2. Passez plusieurs paramètres pour des requêtes complexes (par exemple, `orgId`, `importance`).
+3. Utilisez `LIKE` pour des recherches textuelles flexibles.
+4. Gérez les paramètres facultatifs avec des requêtes dynamiques (par exemple, `IS NULL`).
+5. Room gère automatiquement l'échappement des paramètres pour éviter les problèmes de sécurité SQL (comme l'injection SQL).
+
+Si vous avez un exemple spécifique ou une query à construire, dites-le-moi ! 😊

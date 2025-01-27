@@ -12,7 +12,7 @@ interface TaskDao {
     fun insertAll(vararg tasks: Task)
 
     @Insert
-    fun insert(task: Task)
+    suspend fun insert(task: Task)
 
     @Update
     fun update(task: Task)
@@ -23,8 +23,8 @@ interface TaskDao {
     @Delete
     fun deleteMult(vararg tasks: Task)
 
-    @Query("SELECT * FROM Task")
-    fun getAll(): List <Task>
+    @Query("SELECT * FROM tasks")
+    suspend fun getAll(): List <Task>
 }
 
 @Dao
@@ -38,6 +38,9 @@ interface OrganizationDao {
     @Delete
     fun delete(orga: Organization)
 
-    @Query("SELECT * FROM Organization")
-    fun getAll(): List <Organization>
+    @Query("SELECT * FROM organizations")
+    suspend fun getAll(): List <Organization>
+
+    @Query("SELECT id FROM organizations WHERE name = :name")
+    suspend fun getId(name:String): Int
 }

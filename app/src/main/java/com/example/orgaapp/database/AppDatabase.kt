@@ -4,7 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [Task::class, Organization::class],version = 1)
+@Database(entities = [Task::class, Organization::class],version = 1,
+    exportSchema = true)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase(){
 

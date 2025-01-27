@@ -1,22 +1,22 @@
 package com.example.orgaapp
 
-import com.example.orgaapp.fragments.AddTaskFragment
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
 import android.view.Menu
 import android.view.MenuItem
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.orgaapp.database.AppDatabase
 import com.example.orgaapp.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     lateinit var db: AppDatabase
 
@@ -33,26 +33,24 @@ class MainActivity : AppCompatActivity() {
             applicationContext,
             AppDatabase::class.java,
             "task-db"
-        ).build() //TODO : Examiner le problème de build de la bdd
+        ).addCallback(object: RoomDatabase.Callback(){
+            override fun onCreate(db: SupportSQLiteDatabase){
+                super.onCreate(db)
+                db.execSQL("INSERT INTO organizations (id,name,detail) VALUES (1,'Personnel','Organisation par défaut')")
+            }
+        }).build()
 
         binding.fab.setOnClickListener {
             binding.fab.isEnabled = false
             binding.fab.hide()
-            addFragment(AddTaskFragment())
+            lifecycleScope.launch {
+                Log.d("Tache","Taches insérées : ")
+                db.taskDao().getAll().forEach { task ->
+                    Log.d("Taches",task.title)
+                }
+            }
+            findNavController(R.id.content_main).navigate(R.id.action_firstFragment_to_addTaskFragment)
         }
-    }
-
-    private fun addFragment(fragment: Fragment) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.nav_host_fragment_content_main,fragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -63,12 +61,6 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 
 }

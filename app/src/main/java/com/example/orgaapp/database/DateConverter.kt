@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.Locale
 
 class DateConverter {
-    private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     @TypeConverter
     fun fromDate(date: Date?): String? {
